@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package core.v1;
+option go_package = "github.com/deni12345/dae-core/gen/v1;corev1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+
+message User {
+  string id = 1;
+  string display_name = 2;
+  string email = 3;
+  string avatar_url = 4;
+  bool is_disabled = 5;
+
+  google.protobuf.Timestamp create_at = 20;
+  google.protobuf.Timestamp updated_at = 21;
+};
+
+enum IdentityProvider {
+  IDENTITY_PROVIDER_UNSPECIFIED = 0;
+  IDENTITY_PROVIDER_LOCAL = 1;  // password-based account (managed by BFF)
+  IDENTITY_PROVIDER_GOOGLE = 2; // Google OIDC
+}
+
+message ExternalIdentity {
+  string id = 1;      // doc id = provider:subject
+  string user_id = 2; // linked Core user
+  IdentityProvider provider = 3;
+  string subject = 4; // stable provider user id
+  string email = 5;   // email from provider
+  google.protobuf.Timestamp linked_at = 20;
+}
+
+message Cursor {
+  google.protobuf.Timestamp create_at = 20;
+  string id = 2;
+}
+
+message ListUsersFilter {
+  string query = 1;
+  string email_exact = 2;
+  bool include_disabled = 3;
+}
+
+service UsersService {
+  // Register a new user
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+
+  rpc LinkExternalIdentity(LinkExternalIdentityRequest)
+      returns (LinkExternalIdentityResponse);
+}
+
+message CreateUserRequest {
+  string idempotency_key = 1;
+  string display_name = 2;
+  string email = 3;
+  string avatar_url = 4;
+}
+message CreateUserResponse { User user = 1; }
+
+message GetUserRequest { string id = 1; }
+message GetUserResponse { User User = 1; }
+
+message UpdateUserRequest {
+  string id = 1;
+  google.protobuf.FieldMask update_mask =
+      2; // "display_name,avatar_url,is_disabled"
+  string display_name = 3;
+  string avatar_url = 4;
+  bool is_disabled = 5;
+}
+message UpdateUserResponse { User user = 1; }
+
+message ListUsersRequest {
+  int32 page_size = 1;
+  Cursor cursor = 2;
+  ListUsersFilter filter = 3;
+}
+message ListUsersResponse {
+  repeated User users = 1;
+  Cursor next_cursor = 2;
+}
+
+message LinkExternalIdentityRequest {
+  string idempotency_key = 1;
+  string user_id = 2;
+  IdentityProvider provider = 3;
+  string subject = 4;
+  string email = 5;
+}
+message LinkExternalIdentityResponse { ExternalIdentity identity = 1; }

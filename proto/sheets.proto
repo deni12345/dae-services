@@ -1,0 +1,154 @@
+syntax = "proto3";
+
+package core.v1;
+option go_package = "github.com/deni12345/dae-core/gen/v1;corev1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+
+message Sheet {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string host_user_id = 4;
+
+  string active_menu_id = 5; // provider's restaurant/menu id
+
+  google.protobuf.Timestamp create_at = 20;
+  google.protobuf.Timestamp updated_at = 21;
+}
+
+message SheetMember {
+  string user_id = 1;
+  string sheet_id = 2;
+
+  google.protobuf.Timestamp joined_at = 20;
+}
+
+message Cursor {
+  google.protobuf.Timestamp created_at = 1;
+  string id = 2;
+}
+
+message ListSheetsFilter {
+  string owner_user_id = 1;
+  string name_query = 2; // optional substring match (server-defined)
+}
+
+service SheetsService {
+  rpc CreateSheet(CreateSheetRequest) returns (CreateSheetResponse);
+  rpc GetSheet(GetSheetRequest) returns (GetSheetResponse);
+  rpc UpdateSheet(UpdateSheetRequest) returns (UpdateSheetResponse);
+  rpc ListSheets(ListSheetsRequest) returns (ListSheetsResponse);
+
+  // Membership management
+  rpc AddMember(AddMemberRequest) returns (AddMemberResponse);
+  rpc RemoveMember(RemoveMemberRequest) returns (RemoveMemberResponse);
+  rpc ListMembers(ListMembersRequest) returns (ListMembersResponse);
+
+  // External menu attach/refresh (normalized snapshot in your DB).
+  rpc AttachMenuWithPayload(AttachMenuWithPayloadRequest)
+      returns (AttachMenuWithPayloadResponse);
+  rpc GetMenu(GetMenuRequest) returns (GetMenuResponse);
+}
+
+message CreateSheetRequest {
+  string idempotency_key = 1;
+  string name = 2;
+  string description = 3;
+  string host_user_id = 4;
+}
+message CreateSheetResponse { Sheet sheet = 1; }
+
+message GetSheetRequest { string id = 1; }
+message GetSheetResponse { Sheet sheet = 1; }
+
+message UpdateSheetRequest {
+  string id = 1;
+  google.protobuf.FieldMask update_mask = 2;
+  string name = 3;
+  string description = 4;
+  string active_menu_id = 5;
+}
+message UpdateSheetResponse { Sheet Sheet = 1; }
+
+message ListSheetsRequest {
+  int32 page_size = 1;
+  Cursor cursor = 2;
+  ListSheetsFilter filer = 3;
+}
+message ListSheetsResponse {
+  repeated Sheet sheets = 1;
+  Cursor next_cursor = 2;
+}
+
+message AddMemberRequest {
+  string idempotency_key = 1;
+  string sheet_id = 2;
+  string user_id = 3;
+}
+message AddMemberResponse { SheetMember member = 1; }
+
+message RemoveMemberRequest {
+  string sheet_id = 1;
+  string user_id = 2;
+}
+message RemoveMemberResponse {}
+
+message ListMembersRequest {
+  string sheet_id = 1;
+  int32 page_size = 2;
+  Cursor cursor = 3;
+}
+message ListMembersResponse {
+  repeated SheetMember members = 1;
+  Cursor next_cursor = 2;
+}
+
+message Money {
+  string currency_code = 1; // e.g., "VND"
+  int64 units = 2;          // whole units
+  int32 nanos = 3;          // 10^-9 of a unit
+}
+
+// Normalized menu kept in Core (provider metadata lives here)
+message Menu {
+  string id = 1;
+  string sheet_id = 2;
+  string title = 3;
+  repeated MenuSection sections = 4;
+  google.protobuf.Timestamp fetched_at = 10;
+
+  // Optional provider metadata (kept OFF the Sheet)
+  string provider_id = 11;   // ShopeeFood restaurant id
+  string provider_name = 12; // "SHOPEEFOOD" or whatever label you like
+}
+
+message MenuSection {
+  string id = 1;
+  string title = 2;
+  repeated MenuItem items = 3;
+}
+message MenuItem {
+  string id = 1;
+  string title = 2;
+  Money price = 3;
+  string description = 4;
+  bool available = 5;
+}
+
+message AttachMenuWithPayloadRequest {
+  string idempotency_key = 1;
+  string sheet_id = 2;
+
+  // The BFF sends the normalized menu payload it got from ShopeeFood service.
+  Menu menu = 3;
+}
+
+message AttachMenuWithPayloadResponse {
+  Menu menu = 1;   // stored menu (with its final id)
+  Sheet sheet = 2; // sheet with active_menu_id updated
+}
+
+message GetMenuRequest { string sheet_id = 1; }
+message GetMenuResponse { Menu menu = 1; }
