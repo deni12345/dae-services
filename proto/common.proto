@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package core.v1;
+option go_package = "github.com/deni12345/dae-core/gen/corev1;corev1";
+
+import "google/protobuf/timestamp.proto";
+
+message Cursor {
+  google.protobuf.Timestamp create_at = 20;
+  string id = 2;
+}
+
+message Money {
+  string currency_code = 1; // e.g., "VND"
+  int64 units = 2;          // whole units
+  int32 nanos = 3;          // 10^-9 of a unit
+}

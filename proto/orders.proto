@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package core.v1;
+option go_package = "github.com/deni12345/dae-core/gen/corev1;corev1";
+
+import "common.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_PENDING = 1;
+  ORDER_STATUS_CONFIRMED = 2;
+  ORDER_STATUS_CANCELLED = 3;
+  ORDER_STATUS_COMPLETED = 4;
+}
+
+message OrderLineOption {
+  string group_id = 1;   // from MenuOptionGroup.id
+  string option_id = 2;  // from MenuOption.id
+  string title = 3;      // snapshot of the option title at order time
+  Money price_delta = 4; // snapshot surcharge for ONE unit of this option
+  int32 quantity = 5;
+}
+
+message OrderLine {
+  string menu_item_id = 1;
+  string name = 2;    // snapshot menu item title
+  int32 quantity = 3; // item count
+
+  Money order_base_price = 4;    // snapshot of MenuItem.base_price
+  Money order_options_total = 5; // sum(option.price_delta * option.quantity)
+  Money order_total = 6; // (unit_base_price + unit_options_delta) * quantity
+
+  repeated OrderLineOption options = 7;
+  string note = 8;
+}
+
+message Order {
+  string id = 1;
+  string sheet_id = 2;
+  string user_id = 3;
+  repeated OrderLine lines = 4;
+
+  Money subtotal = 5;
+  Money delivery_fee = 6;
+  Money discount = 7;
+  Money total = 8;
+
+  OrderStatus status = 9;
+  string note = 10;
+
+  google.protobuf.Timestamp create_at = 20;
+  google.protobuf.Timestamp updated_at = 21;
+}
+
+message ListOrdersFilter {
+  string sheet_id = 1;                 // required
+  OrderStatus status = 2;              // optional
+  string user_id = 3;                  // optional
+  google.protobuf.Timestamp since = 4; // updated since (optional)
+}
+
+service OrdersService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+
+  // Realtime stream for a sheet's orders.
+  rpc StreamOrders(StreamOrdersRequest) returns (stream StreamOrdersResponse);
+}
+
+message CreateOrderRequest {
+  string idempotency_key = 1; // dedupe client retries
+  string sheet_id = 2;
+  string user_id = 3;
+  repeated OrderLine lines = 4;
+  Money delivery_fee = 5;
+  Money discount = 6;
+  string note = 7;
+}
+message CreateOrderResponse { Order order = 1; }
+
+message UpdateOrderRequest {
+  string id = 1;
+  google.protobuf.FieldMask update_mask = 2;
+  repeated OrderLine lines = 3;
+  Money delivery_fee = 4;
+  Money discount = 5;
+  OrderStatus status = 6;
+  string note = 7;
+}
+message UpdateOrderResponse { Order order = 1; }
+
+message GetOrderRequest { string id = 1; }
+message GetOrderResponse { Order order = 1; }
+
+message ListOrdersRequest {
+  int32 page_size = 1;
+  Cursor cursor = 2;
+  ListOrdersFilter filter = 3;
+}
+message ListOrdersResponse {
+  repeated Order orders = 1;
+  Cursor next_cursor = 2;
+}
+
+message StreamOrdersRequest {
+  string sheet_id = 1;                 // required
+  google.protobuf.Timestamp since = 2; // optional resume time
+  bool include_snapshot = 3;           // send current list first
+}
+
+enum StreamEventType {
+  STREAM_EVENT_TYPE_UNSPECIFIED = 0;
+  STREAM_EVENT_TYPE_CREATED = 1;
+  STREAM_EVENT_TYPE_UPDATED = 2;
+  STREAM_EVENT_TYPE_DELETED = 3;
+  STREAM_EVENT_TYPE_SNAPSHOT = 4;
+}
+
+message StreamOrdersResponse {
+  StreamEventType type = 1;
+  Order order = 2;             // for CREATED/UPDATED
+  string deleted_order_id = 3; // for DELETED
+  repeated Order snapshot = 4; // for SNAPSHOT (if include_snapshot=true)
+  google.protobuf.Timestamp emitted_at = 10;
+}

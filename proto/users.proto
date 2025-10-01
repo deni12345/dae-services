@@ -1,10 +1,17 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/gen/v1;corev1";
+option go_package = "github.com/deni12345/dae-core/gen/corev1;corev1";
 
+import "common.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
+
+enum UserRole {
+  USER_ROLE_UNSPECIFIED = 0;
+  USER_ROLE_USER = 1;  // default
+  USER_ROLE_ADMIN = 2; // elevated
+}
 
 message User {
   string id = 1;
@@ -12,6 +19,7 @@ message User {
   string email = 3;
   string avatar_url = 4;
   bool is_disabled = 5;
+  repeated UserRole roles = 6;
 
   google.protobuf.Timestamp create_at = 20;
   google.protobuf.Timestamp updated_at = 21;
@@ -32,11 +40,6 @@ message ExternalIdentity {
   google.protobuf.Timestamp linked_at = 20;
 }
 
-message Cursor {
-  google.protobuf.Timestamp create_at = 20;
-  string id = 2;
-}
-
 message ListUsersFilter {
   string query = 1;
   string email_exact = 2;
@@ -52,7 +55,16 @@ service UsersService {
 
   rpc LinkExternalIdentity(LinkExternalIdentityRequest)
       returns (LinkExternalIdentityResponse);
+  // Admin only
+  rpc AdminSetUserRoles(AdminSetUserRolesRequest)
+      returns (AdminSetUserRolesResponse);
 }
+
+message AdminSetUserRolesRequest {
+  string user_id = 1;
+  repeated UserRole roles = 2; // full replace
+}
+message AdminSetUserRolesResponse { User user = 1; }
 
 message CreateUserRequest {
   string idempotency_key = 1;

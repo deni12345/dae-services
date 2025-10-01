@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/gen/v1;corev1";
+option go_package = "github.com/deni12345/dae-core/gen/corev1;corev1";
 
+import "common.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
 
@@ -12,7 +13,7 @@ message Sheet {
   string description = 3;
   string host_user_id = 4;
 
-  string active_menu_id = 5; // provider's restaurant/menu id
+  string active_menu_id = 5; // provider's menu id
 
   google.protobuf.Timestamp create_at = 20;
   google.protobuf.Timestamp updated_at = 21;
@@ -23,11 +24,6 @@ message SheetMember {
   string sheet_id = 2;
 
   google.protobuf.Timestamp joined_at = 20;
-}
-
-message Cursor {
-  google.protobuf.Timestamp created_at = 1;
-  string id = 2;
 }
 
 message ListSheetsFilter {
@@ -105,13 +101,6 @@ message ListMembersResponse {
   Cursor next_cursor = 2;
 }
 
-message Money {
-  string currency_code = 1; // e.g., "VND"
-  int64 units = 2;          // whole units
-  int32 nanos = 3;          // 10^-9 of a unit
-}
-
-// Normalized menu kept in Core (provider metadata lives here)
 message Menu {
   string id = 1;
   string sheet_id = 2;
@@ -134,6 +123,30 @@ message MenuItem {
   string title = 2;
   Money price = 3;
   string description = 4;
+  bool available = 5;
+
+  // Option group contains options like bubbles, sugar level, etc.
+  repeated MenuOptionGroup option_groups = 10;
+}
+
+message MenuOptionGroup {
+  string id = 1;
+  string title = 2;
+
+  // Selection rules
+  bool required = 3;     // e.g., size must be chosen
+  bool multi_select = 4; // true => can pick many
+  int32 min_select = 5;  // 0..n
+  int32 max_select = 6;  // 1..n
+
+  repeated MenuOption options = 10;
+}
+
+message MenuOption {
+  string id = 1;
+  string title = 2;
+  Money price_delta = 3;  // surcharge/discount for ONE unit
+  int32 max_quantity = 4; // 1 if not quantifiable; >1 for “double boba”
   bool available = 5;
 }
 
