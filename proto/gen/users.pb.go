@@ -7,13 +7,14 @@
 package corev1
 
 import (
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	field_mask "google.golang.org/genproto/protobuf/field_mask"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (

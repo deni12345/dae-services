@@ -14,7 +14,7 @@ type User struct {
 	ID         string
 	Email      string
 	Name       string
-	Role       Role
+	Role       []Role
 	IsDisabled bool
 	AvatarURL  string
 	CreatedAt  time.Time

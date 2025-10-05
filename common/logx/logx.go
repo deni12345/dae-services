@@ -25,3 +25,10 @@ func Debug(msg string, args ...any) {
 	}
 	logx.Debug(msg, args...)
 }
+
+func Fatalf(msg string, args ...any) {
+	if logx == nil {
+		return
+	}
+	logx.Error(msg, args...)
+}

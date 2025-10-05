@@ -30,8 +30,8 @@ func main() {
 		})
 	})
 
-	log.Printf("l")
-	if err := http.ListenAndServe(fmt.Sprintf(":%v", configs.GetValues().Port), r); err != nil {
+	logx.Info("server running at port: %v", configs.Values.Port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", configs.Values.Port), r); err != nil {
 		log.Fatalf("server error: %v", err)
 	}
 }

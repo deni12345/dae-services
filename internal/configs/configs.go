@@ -14,6 +14,7 @@ import (
 
 type Firestore struct {
 	SecretKey string `yaml:"secret_key" env:"SECRET_KEY" env-default:""`
+	ProjectID string `yaml:"project_id" env:"PROJECT_ID" env-default:""`
 }
 
 type Config struct {
@@ -80,7 +81,7 @@ var (
 	defaultRetries = 3
 	delay          = 100 * time.Millisecond
 	maxDelay       = 1000 * time.Millisecond
-	values         = Config{}
+	Values         = Config{}
 )
 
 func LoadWithRetry(ctx context.Context, sources ...Source) error {
@@ -92,7 +93,7 @@ func LoadWithRetry(ctx context.Context, sources ...Source) error {
 		err = Load(&cfg, sources...)
 
 		if err == nil {
-			values = cfg
+			Values = cfg
 			return nil
 		}
 
@@ -114,8 +115,4 @@ func LoadWithRetry(ctx context.Context, sources ...Source) error {
 		}
 	}
 	return err
-}
-
-func GetValues() Config {
-	return values
 }
