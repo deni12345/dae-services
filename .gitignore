@@ -1,1 +1,22 @@
+# env
 configs.yml
+
+.idea/
+.vscode/
+.github/
+
+# Firestore Emulator exports (these should stay in Docker volume)
+firebase-export-*
+firestore-debug.log
+ui-debug.log
+database-debug.log
+pubsub-debug.log
+firebase-debug.log
+.firebase/
+
+# Build artifacts
+bin/
+*.out
+coverage.out
+coverage.html
+main

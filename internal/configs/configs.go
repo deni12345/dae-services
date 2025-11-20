@@ -19,7 +19,12 @@ type Firestore struct {
 
 type Config struct {
 	Port      int       `yaml:"port" env:"PORT" env-default:"8080"`
-	Firestore Firestore `yaml:"fire_store" env-prefix:"FIRESTORE_"`
+	Firestore Firestore `yaml:"firestore" env-prefix:"FIRESTORE_"`
+	Redis     struct {
+		Addr     string `yaml:"addr" env:"ADDR" env-default:"localhost:6379"`
+		Password string `yaml:"password" env:"PASSWORD" env-default:"password"`
+	}
+	PageSize int32 `yaml:"page_size" env:"PAGE_SIZE" env-default:"20"`
 }
 
 type Source interface {

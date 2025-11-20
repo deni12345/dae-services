@@ -1,0 +1,25 @@
+# Prevent mounting unnecessary files into container
+node_modules/
+.git/
+.github/
+.vscode/
+.idea/
+
+# Build artifacts
+bin/
+*.out
+coverage.out
+coverage.html
+main
+
+# Firestore emulator exports
+firebase-export-*
+*-debug.log
+.firebase/
+
+# Environment
+.env
+configs.yml
+
+# Go specific
+vendor/

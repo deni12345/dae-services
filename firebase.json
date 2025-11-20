@@ -1,0 +1,18 @@
+{
+  "firestore": {
+    "indexes": [
+      {
+        "collectionGroup": "members",
+        "queryScope": "COLLECTION_GROUP",
+        "fields": [
+          { "fieldPath": "user_id", "order": "ASCENDING" },
+          { "fieldPath": "joined_at", "order": "DESCENDING" }
+        ]
+      }
+    ]
+  },
+  "emulators": {
+    "firestore": { "host": "0.0.0.0", "port": 8080 },
+    "ui": { "enabled": true, "host": "0.0.0.0", "port": 4000 }
+  }
+}

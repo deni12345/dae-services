@@ -1,11 +1,10 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
 
 import "common.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/field_mask.proto";
 
 enum UserRole {
   USER_ROLE_UNSPECIFIED = 0;
@@ -21,7 +20,7 @@ message User {
   bool is_disabled = 5;
   repeated UserRole roles = 6;
 
-  google.protobuf.Timestamp create_at = 20;
+  google.protobuf.Timestamp created_at = 20;
   google.protobuf.Timestamp updated_at = 21;
 };
 
@@ -47,61 +46,46 @@ message ListUsersFilter {
 }
 
 service UsersService {
-  // Register a new user
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  // User permissions
+  rpc GetUser(GetUserReq) returns (GetUserResp);
+  rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp);
+  rpc ListUsers(ListUsersReq) returns (ListUsersResp);
 
-  rpc LinkExternalIdentity(LinkExternalIdentityRequest)
-      returns (LinkExternalIdentityResponse);
   // Admin only
-  rpc AdminSetUserRoles(AdminSetUserRolesRequest)
-      returns (AdminSetUserRolesResponse);
+  rpc AdminSetUserRoles(AdminSetUserRolesReq) returns (AdminSetUserRolesResp);
+  rpc AdminSetUserDisabled(AdminSetUserDisabledReq)
+      returns (AdminSetUserDisabledResp);
 }
 
-message AdminSetUserRolesRequest {
+message AdminSetUserRolesReq {
   string user_id = 1;
   repeated UserRole roles = 2; // full replace
 }
-message AdminSetUserRolesResponse { User user = 1; }
+message AdminSetUserRolesResp { User user = 1; }
 
-message CreateUserRequest {
-  string idempotency_key = 1;
-  string display_name = 2;
-  string email = 3;
-  string avatar_url = 4;
-}
-message CreateUserResponse { User user = 1; }
+message GetUserReq { string id = 1; }
+message GetUserResp { User user = 1; }
 
-message GetUserRequest { string id = 1; }
-message GetUserResponse { User User = 1; }
-
-message UpdateUserRequest {
+message UpdateUserReq {
   string id = 1;
-  google.protobuf.FieldMask update_mask =
-      2; // "display_name,avatar_url,is_disabled"
-  string display_name = 3;
-  string avatar_url = 4;
-  bool is_disabled = 5;
+  optional string display_name = 3;
+  optional string avatar_url = 4;
+  optional bool is_disabled = 5;
 }
-message UpdateUserResponse { User user = 1; }
+message UpdateUserResp { User user = 1; }
 
-message ListUsersRequest {
+message ListUsersReq {
   int32 page_size = 1;
   Cursor cursor = 2;
   ListUsersFilter filter = 3;
 }
-message ListUsersResponse {
+message ListUsersResp {
   repeated User users = 1;
-  Cursor next_cursor = 2;
+  optional Cursor next_cursor = 2;
 }
 
-message LinkExternalIdentityRequest {
-  string idempotency_key = 1;
-  string user_id = 2;
-  IdentityProvider provider = 3;
-  string subject = 4;
-  string email = 5;
+message AdminSetUserDisabledReq {
+  string user_id = 1;
+  bool is_disabled = 2;
 }
-message LinkExternalIdentityResponse { ExternalIdentity identity = 1; }
+message AdminSetUserDisabledResp { User user = 1; }

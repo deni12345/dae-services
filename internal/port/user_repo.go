@@ -6,35 +6,27 @@ import (
 	"github.com/deni12345/dae-core/internal/domain"
 )
 
-type ListUsersReq struct {
-	Limit           int
+type ListUserQuery struct {
+	Limit           int32
 	Cursor          string
-	ExactEmail      string
-	Query           string
 	IncludeDisabled bool
 }
 
-type ListUsersResp struct {
-	Users      []*domain.User
-	NextCursor string
-}
-
-type PatchUser struct {
+type UpdateUserRequest struct {
 	ID         string
-	Email      *string
-	Name       *string
+	UserName   *string
 	AvatarURL  *string
 	IsDisabled *bool
 }
 
-type UserRepo interface {
-	Create(ctx context.Context, user *domain.User) (string, error)
+type UsersRepo interface {
+	// User
 	GetByID(ctx context.Context, id string) (*domain.User, error)
 	GetByEmail(ctx context.Context, email string) (*domain.User, error)
-	Update(ctx context.Context, patch PatchUser) error
-	List(ctx context.Context, req ListUsersReq) (ListUsersResp, error)
-}
+	Update(ctx context.Context, id string, fn func(u *domain.User) error) (*domain.User, error)
+	List(ctx context.Context, query ListUserQuery) ([]*domain.User, error)
 
-type ExternalIdentityRepo interface {
-	Link(ctx context.Context, ident *domain.ExternalIdentity) error
+	// Admin
+	SetRoles(ctx context.Context, id string, roles []domain.Role) (*domain.User, error)
+	SetDisabled(ctx context.Context, id string, isDisabled bool) (*domain.User, error)
 }

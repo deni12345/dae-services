@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
 
 service HealthService {
   rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
