@@ -1,41 +1,55 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-services/proto/gen/corev1;corev1";
 
 import "common.proto";
 import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
 enum UserRole {
   USER_ROLE_UNSPECIFIED = 0;
-  USER_ROLE_USER = 1;  // default
+  USER_ROLE_USER = 1; // default
   USER_ROLE_ADMIN = 2; // elevated
+  USER_ROLE_HOST = 3; // sheet host
+}
+
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_ACTIVE = 1;
+  USER_STATUS_SUSPENDED = 2;
+  USER_STATUS_DELETED = 3;
 }
 
 message User {
   string id = 1;
-  string display_name = 2;
-  string email = 3;
-  string avatar_url = 4;
-  bool is_disabled = 5;
-  repeated UserRole roles = 6;
+  string email = 2;
+  string email_normalized = 3;
+  bool email_verified = 4;
+  string name = 5;
+  string display_name = 6;
+  string photo_url = 7;
+  string phone = 8;
+  repeated UserRole roles = 9;
+  UserStatus status = 10;
 
   google.protobuf.Timestamp created_at = 20;
   google.protobuf.Timestamp updated_at = 21;
+  google.protobuf.Timestamp last_login_at = 22;
 };
 
 enum IdentityProvider {
   IDENTITY_PROVIDER_UNSPECIFIED = 0;
-  IDENTITY_PROVIDER_LOCAL = 1;  // password-based account (managed by BFF)
+  IDENTITY_PROVIDER_LOCAL = 1; // password-based account (managed by BFF)
   IDENTITY_PROVIDER_GOOGLE = 2; // Google OIDC
 }
 
 message ExternalIdentity {
-  string id = 1;      // doc id = provider:subject
+  string id = 1; // doc id = provider:subject
   string user_id = 2; // linked Core user
   IdentityProvider provider = 3;
   string subject = 4; // stable provider user id
-  string email = 5;   // email from provider
+  string email = 5; // email from provider
   google.protobuf.Timestamp linked_at = 20;
 }
 
@@ -47,6 +61,7 @@ message ListUsersFilter {
 
 service UsersService {
   // User permissions
+  rpc CreateUser(CreateUserReq) returns (CreateUserResp);
   rpc GetUser(GetUserReq) returns (GetUserResp);
   rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp);
   rpc ListUsers(ListUsersReq) returns (ListUsersResp);
@@ -58,18 +73,42 @@ service UsersService {
 }
 
 message AdminSetUserRolesReq {
-  string user_id = 1;
+  string user_id = 1 [(validate.rules).string = {min_len: 1}];
   repeated UserRole roles = 2; // full replace
 }
 message AdminSetUserRolesResp { User user = 1; }
 
-message GetUserReq { string id = 1; }
+message AdminSetUserDisabledReq {
+  string user_id = 1 [(validate.rules).string = {min_len: 1}];
+  bool is_disabled = 2;
+}
+message AdminSetUserDisabledResp { User user = 1; }
+message CreateUserReq {
+  string email = 1 [ (validate.rules).string.email = true ];
+  string name = 2 [ (validate.rules).string = {min_len : 1, max_len : 50} ];
+  optional string display_name = 3
+      [ (validate.rules).string = {min_len : 1, max_len : 50} ];
+  optional string photo_url = 4 [ (validate.rules).string.uri = true ];
+  optional string phone = 5
+      [ (validate.rules).string = {min_len : 10, pattern : "^[0-9]+$"} ];
+
+  // Identity provider info (required)
+  IdentityProvider provider = 6 [ (validate.rules).enum.defined_only = true ];
+  string subject = 7;
+
+  // Optional password for local provider
+  optional string password = 8 [ (validate.rules).string = {min_len : 6} ];
+}
+message CreateUserResp { User user = 1; }
+
+message GetUserReq { string id = 1 [(validate.rules).string = {min_len: 1}]; }
 message GetUserResp { User user = 1; }
 
 message UpdateUserReq {
-  string id = 1;
-  optional string display_name = 3;
-  optional string avatar_url = 4;
+  string id = 1 [(validate.rules).string = {min_len: 1}];
+  optional string display_name = 3
+      [ (validate.rules).string = {min_len : 1, max_len : 50} ];
+  optional string avatar_url = 4 [ (validate.rules).string.uri = true ];
   optional bool is_disabled = 5;
 }
 message UpdateUserResp { User user = 1; }
@@ -83,9 +122,3 @@ message ListUsersResp {
   repeated User users = 1;
   optional Cursor next_cursor = 2;
 }
-
-message AdminSetUserDisabledReq {
-  string user_id = 1;
-  bool is_disabled = 2;
-}
-message AdminSetUserDisabledResp { User user = 1; }

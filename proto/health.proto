@@ -1,20 +1,14 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-services/proto/gen/corev1;corev1";
 
 service HealthService {
-  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+  rpc CheckHealth(HealthCheckReq) returns (HealthCheckResp);
 }
 
-message HealthCheckRequest {}
+message HealthCheckReq {}
 
-message HealthCheckResponse {
-  enum ServingStatus {
-    UNKNOWN = 0;
-    SERVING = 1;
-    NOT_SERVING = 2;
-  }
-  ServingStatus status = 1;
-  string version = 2; // optional git/tag injected by server
+message HealthCheckResp {
+  string message = 1;
 }

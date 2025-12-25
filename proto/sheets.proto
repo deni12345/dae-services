@@ -1,10 +1,11 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-services/proto/gen/corev1;corev1";
 
 import "common.proto";
 import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
 enum SheetStatus {
   SHEET_STATUS_UNSPECIFIED = 0;
@@ -57,31 +58,31 @@ service SheetsService {
 }
 
 message CreateSheetReq {
-  string idempotency_key = 1;
-  string name = 2;
-  string description = 3;
-  string host_user_id = 4;
+  string idempotency_key = 1 [(validate.rules).string = {min_len: 1}];
+  string name = 2 [(validate.rules).string = {min_len: 1}];
+  string description = 3 [(validate.rules).string = {max_len: 1000}];
+  string host_user_id = 4 [(validate.rules).string = {min_len: 1}];
   Money delivery_fee = 5;
-  int32 discount = 6;
-  repeated string member_ids = 7;
-  repeated MenuItem items = 10;
+  int32 discount = 6 [(validate.rules).int32 = {gte: 0}];
+  repeated string member_ids = 7 [(validate.rules).repeated = {min_items: 0}];
+  repeated MenuItem items = 10 [(validate.rules).repeated = {min_items: 0}];
 }
 message CreateSheetResp { Sheet sheet = 1; }
 
-message GetSheetReq { string id = 1; }
+message GetSheetReq { string id = 1 [(validate.rules).string = {min_len: 1}]; }
 message GetSheetResp { Sheet sheet = 1; }
 
 message UpdateSheetReq {
-  string id = 1;
-  optional string name = 3;
-  optional string description = 4;
+  string id = 1 [(validate.rules).string = {min_len: 1}];
+  optional string name = 3 [(validate.rules).string = {min_len: 1, max_len: 255}];
+  optional string description = 4 [(validate.rules).string = {max_len: 1000}];
   optional string active_menu_id = 5;
   optional SheetStatus status = 8;
 }
 message UpdateSheetResp { Sheet sheet = 1; }
 
 message ListSheetsReq {
-  int32 page_size = 1;
+  int32 page_size = 1 [(validate.rules).int32 = {gte: 1, lte: 100}];
   Cursor cursor = 2;
   ListSheetsFilter filter = 3;
 }
@@ -91,21 +92,21 @@ message ListSheetsResp {
 }
 
 message JoinSheetRequest {
-  string idempotency_key = 1;
-  string sheet_id = 2;
-  string user_id = 3;
+  string idempotency_key = 1 [(validate.rules).string = {min_len: 1}];
+  string sheet_id = 2 [(validate.rules).string = {min_len: 1}];
+  string user_id = 3 [(validate.rules).string = {min_len: 1}];
 }
 message JoinSheetResponse { SheetMember member = 1; }
 
 message RemoveMemberRequest {
-  string sheet_id = 1;
-  string user_id = 2;
+  string sheet_id = 1 [(validate.rules).string = {min_len: 1}];
+  string user_id = 2 [(validate.rules).string = {min_len: 1}];
 }
 message RemoveMemberResponse {}
 
 message ListMembersRequest {
-  string sheet_id = 1;
-  int32 page_size = 2;
+  string sheet_id = 1 [(validate.rules).string = {min_len: 1}];
+  int32 page_size = 2 [(validate.rules).int32 = {gte: 1, lte: 100}];
   Cursor cursor = 5;
 }
 message ListMembersResponse {
@@ -114,49 +115,49 @@ message ListMembersResponse {
 }
 
 message MenuItem {
-  string id = 1;
-  string title = 2;
+  string id = 1 [(validate.rules).string = {min_len: 1}];
+  string title = 2 [(validate.rules).string = {min_len: 1}];
   Money price = 3;
-  string description = 4;
+  string description = 4 [(validate.rules).string = {max_len: 1000}];
   bool available = 5;
 
   // Option group contains options like bubbles, sugar level, etc.
-  repeated MenuOptionGroup option_groups = 10;
+  repeated MenuOptionGroup option_groups = 10 [(validate.rules).repeated = {min_items: 0}];
 }
 
 message MenuOptionGroup {
-  string id = 1;
-  string title = 2;
+  string id = 1 [(validate.rules).string = {min_len: 1}];
+  string title = 2 [(validate.rules).string = {min_len: 1}];
 
   // Selection rules
-  bool required = 3;     // e.g., size must be chosen
+  bool required = 3; // e.g., size must be chosen
   bool multi_select = 4; // true => can pick many
-  int32 min_select = 5;  // 0..n
-  int32 max_select = 6;  // 1..n
+  int32 min_select = 5; // 0..n
+  int32 max_select = 6; // 1..n
 
   repeated MenuOption options = 10;
 }
 
 message MenuOption {
-  string id = 1;
-  string title = 2;
-  Money price_delta = 3;  // surcharge/discount for ONE unit
-  int32 max_quantity = 4; // 1 if not quantifiable; >1 for “double boba”
+  string id = 1 [(validate.rules).string = {min_len: 1}];
+  string title = 2 [(validate.rules).string = {min_len: 1}];
+  Money price_delta = 3; // surcharge/discount for ONE unit
+  int32 max_quantity = 4 [(validate.rules).int32 = {gte: 1}]; // 1 if not quantifiable; >1 for “double boba”
   bool available = 5;
 }
 
 message AttachMenuWithPayloadReq {
-  string idempotency_key = 1;
-  string sheet_id = 2;
+  string idempotency_key = 1 [(validate.rules).string = {min_len: 1}];
+  string sheet_id = 2 [(validate.rules).string = {min_len: 1}];
 
   // The normalized menu items
-  repeated MenuItem items = 3;
+  repeated MenuItem items = 3 [(validate.rules).repeated = {min_items: 1}];
 }
 
 message AttachMenuWithPayloadResp {
   repeated MenuItem items = 1; // stored menu items
-  Sheet sheet = 2;             // sheet with active_menu_id updated
+  Sheet sheet = 2; // sheet with active_menu_id updated
 }
 
-message GetMenuReq { string sheet_id = 1; }
+message GetMenuReq { string sheet_id = 1 [(validate.rules).string = {min_len: 1}]; }
 message GetMenuResp { repeated MenuItem items = 1; }

@@ -7,9 +7,9 @@
 package corev1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -122,12 +122,12 @@ var File_common_proto protoreflect.FileDescriptor
 
 const file_common_proto_rawDesc = "" +
 	"\n" +
-	"\fcommon.proto\x12\acore.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x18\n" +
-	"\x06Cursor\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"D\n" +
-	"\x05Money\x12#\n" +
-	"\rcurrency_code\x18\x01 \x01(\tR\fcurrencyCode\x12\x16\n" +
-	"\x06amount\x18\x02 \x01(\x03R\x06amountB7Z5github.com/deni12345/dae-core/proto/gen/corev1;corev1b\x06proto3"
+	"\fcommon.proto\x12\acore.v1\x1a\x17validate/validate.proto\"!\n" +
+	"\x06Cursor\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\"X\n" +
+	"\x05Money\x12.\n" +
+	"\rcurrency_code\x18\x01 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x03R\fcurrencyCode\x12\x1f\n" +
+	"\x06amount\x18\x02 \x01(\x03B\a\xfaB\x04\"\x02(\x00R\x06amountB;Z9github.com/deni12345/dae-services/proto/gen/corev1;corev1b\x06proto3"
 
 var (
 	file_common_proto_rawDescOnce sync.Once

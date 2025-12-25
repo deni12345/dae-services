@@ -7,6 +7,7 @@
 package corev1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -1529,7 +1530,7 @@ var File_sheets_proto protoreflect.FileDescriptor
 
 const file_sheets_proto_rawDesc = "" +
 	"\n" +
-	"\fsheets.proto\x12\acore.v1\x1a\fcommon.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x88\x03\n" +
+	"\fsheets.proto\x12\acore.v1\x1a\fcommon.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\x88\x03\n" +
 	"\x05Sheet\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -1551,29 +1552,30 @@ const file_sheets_proto_rawDesc = "" +
 	"\x10ListSheetsFilter\x12\"\n" +
 	"\rowner_user_id\x18\x01 \x01(\tR\vownerUserId\x12\x1d\n" +
 	"\n" +
-	"name_query\x18\x02 \x01(\tR\tnameQuery\"\xa8\x02\n" +
-	"\x0eCreateSheetReq\x12'\n" +
-	"\x0fidempotency_key\x18\x01 \x01(\tR\x0eidempotencyKey\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12 \n" +
-	"\fhost_user_id\x18\x04 \x01(\tR\n" +
+	"name_query\x18\x02 \x01(\tR\tnameQuery\"\xea\x02\n" +
+	"\x0eCreateSheetReq\x120\n" +
+	"\x0fidempotency_key\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x0eidempotencyKey\x12\x1b\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12*\n" +
+	"\vdescription\x18\x03 \x01(\tB\b\xfaB\x05r\x03\x18\xe8\aR\vdescription\x12)\n" +
+	"\fhost_user_id\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\n" +
 	"hostUserId\x121\n" +
-	"\fdelivery_fee\x18\x05 \x01(\v2\x0e.core.v1.MoneyR\vdeliveryFee\x12\x1a\n" +
-	"\bdiscount\x18\x06 \x01(\x05R\bdiscount\x12\x1d\n" +
+	"\fdelivery_fee\x18\x05 \x01(\v2\x0e.core.v1.MoneyR\vdeliveryFee\x12#\n" +
+	"\bdiscount\x18\x06 \x01(\x05B\a\xfaB\x04\x1a\x02(\x00R\bdiscount\x12'\n" +
 	"\n" +
-	"member_ids\x18\a \x03(\tR\tmemberIds\x12'\n" +
+	"member_ids\x18\a \x03(\tB\b\xfaB\x05\x92\x01\x02\b\x00R\tmemberIds\x121\n" +
 	"\x05items\x18\n" +
-	" \x03(\v2\x11.core.v1.MenuItemR\x05items\"7\n" +
+	" \x03(\v2\x11.core.v1.MenuItemB\b\xfaB\x05\x92\x01\x02\b\x00R\x05items\"7\n" +
 	"\x0fCreateSheetResp\x12$\n" +
-	"\x05sheet\x18\x01 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"\x1d\n" +
-	"\vGetSheetReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"4\n" +
+	"\x05sheet\x18\x01 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"&\n" +
+	"\vGetSheetReq\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\"4\n" +
 	"\fGetSheetResp\x12$\n" +
-	"\x05sheet\x18\x01 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"\xf5\x01\n" +
-	"\x0eUpdateSheetReq\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x00R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x04 \x01(\tH\x01R\vdescription\x88\x01\x01\x12)\n" +
+	"\x05sheet\x18\x01 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"\x94\x02\n" +
+	"\x0eUpdateSheetReq\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12#\n" +
+	"\x04name\x18\x03 \x01(\tB\n" +
+	"\xfaB\ar\x05\x10\x01\x18\xff\x01H\x00R\x04name\x88\x01\x01\x12/\n" +
+	"\vdescription\x18\x04 \x01(\tB\b\xfaB\x05r\x03\x18\xe8\aH\x01R\vdescription\x88\x01\x01\x12)\n" +
 	"\x0eactive_menu_id\x18\x05 \x01(\tH\x02R\factiveMenuId\x88\x01\x01\x121\n" +
 	"\x06status\x18\b \x01(\x0e2\x14.core.v1.SheetStatusH\x03R\x06status\x88\x01\x01B\a\n" +
 	"\x05_nameB\x0e\n" +
@@ -1581,46 +1583,46 @@ const file_sheets_proto_rawDesc = "" +
 	"\x0f_active_menu_idB\t\n" +
 	"\a_status\"7\n" +
 	"\x0fUpdateSheetResp\x12$\n" +
-	"\x05sheet\x18\x01 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"\x88\x01\n" +
-	"\rListSheetsReq\x12\x1b\n" +
-	"\tpage_size\x18\x01 \x01(\x05R\bpageSize\x12'\n" +
+	"\x05sheet\x18\x01 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"\x93\x01\n" +
+	"\rListSheetsReq\x12&\n" +
+	"\tpage_size\x18\x01 \x01(\x05B\t\xfaB\x06\x1a\x04\x18d(\x01R\bpageSize\x12'\n" +
 	"\x06cursor\x18\x02 \x01(\v2\x0f.core.v1.CursorR\x06cursor\x121\n" +
 	"\x06filter\x18\x03 \x01(\v2\x19.core.v1.ListSheetsFilterR\x06filter\"\x7f\n" +
 	"\x0eListSheetsResp\x12&\n" +
 	"\x06sheets\x18\x01 \x03(\v2\x0e.core.v1.SheetR\x06sheets\x125\n" +
 	"\vnext_cursor\x18\x02 \x01(\v2\x0f.core.v1.CursorH\x00R\n" +
 	"nextCursor\x88\x01\x01B\x0e\n" +
-	"\f_next_cursor\"o\n" +
-	"\x10JoinSheetRequest\x12'\n" +
-	"\x0fidempotency_key\x18\x01 \x01(\tR\x0eidempotencyKey\x12\x19\n" +
-	"\bsheet_id\x18\x02 \x01(\tR\asheetId\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\"A\n" +
+	"\f_next_cursor\"\x8a\x01\n" +
+	"\x10JoinSheetRequest\x120\n" +
+	"\x0fidempotency_key\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x0eidempotencyKey\x12\"\n" +
+	"\bsheet_id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\asheetId\x12 \n" +
+	"\auser_id\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"A\n" +
 	"\x11JoinSheetResponse\x12,\n" +
-	"\x06member\x18\x01 \x01(\v2\x14.core.v1.SheetMemberR\x06member\"I\n" +
-	"\x13RemoveMemberRequest\x12\x19\n" +
-	"\bsheet_id\x18\x01 \x01(\tR\asheetId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\"\x16\n" +
-	"\x14RemoveMemberResponse\"u\n" +
-	"\x12ListMembersRequest\x12\x19\n" +
-	"\bsheet_id\x18\x01 \x01(\tR\asheetId\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12'\n" +
+	"\x06member\x18\x01 \x01(\v2\x14.core.v1.SheetMemberR\x06member\"[\n" +
+	"\x13RemoveMemberRequest\x12\"\n" +
+	"\bsheet_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\asheetId\x12 \n" +
+	"\auser_id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x06userId\"\x16\n" +
+	"\x14RemoveMemberResponse\"\x89\x01\n" +
+	"\x12ListMembersRequest\x12\"\n" +
+	"\bsheet_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\asheetId\x12&\n" +
+	"\tpage_size\x18\x02 \x01(\x05B\t\xfaB\x06\x1a\x04\x18d(\x01R\bpageSize\x12'\n" +
 	"\x06cursor\x18\x05 \x01(\v2\x0f.core.v1.CursorR\x06cursor\"\x8c\x01\n" +
 	"\x13ListMembersResponse\x12.\n" +
 	"\amembers\x18\x01 \x03(\v2\x14.core.v1.SheetMemberR\amembers\x125\n" +
 	"\vnext_cursor\x18\x02 \x01(\v2\x0f.core.v1.CursorH\x00R\n" +
 	"nextCursor\x88\x01\x01B\x0e\n" +
-	"\f_next_cursor\"\xd5\x01\n" +
-	"\bMenuItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12$\n" +
-	"\x05price\x18\x03 \x01(\v2\x0e.core.v1.MoneyR\x05price\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1c\n" +
-	"\tavailable\x18\x05 \x01(\bR\tavailable\x12=\n" +
+	"\f_next_cursor\"\xfb\x01\n" +
+	"\bMenuItem\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12\x1d\n" +
+	"\x05title\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x05title\x12$\n" +
+	"\x05price\x18\x03 \x01(\v2\x0e.core.v1.MoneyR\x05price\x12*\n" +
+	"\vdescription\x18\x04 \x01(\tB\b\xfaB\x05r\x03\x18\xe8\aR\vdescription\x12\x1c\n" +
+	"\tavailable\x18\x05 \x01(\bR\tavailable\x12G\n" +
 	"\roption_groups\x18\n" +
-	" \x03(\v2\x18.core.v1.MenuOptionGroupR\foptionGroups\"\xe3\x01\n" +
-	"\x0fMenuOptionGroup\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1a\n" +
+	" \x03(\v2\x18.core.v1.MenuOptionGroupB\b\xfaB\x05\x92\x01\x02\b\x00R\foptionGroups\"\xf5\x01\n" +
+	"\x0fMenuOptionGroup\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12\x1d\n" +
+	"\x05title\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x05title\x12\x1a\n" +
 	"\brequired\x18\x03 \x01(\bR\brequired\x12!\n" +
 	"\fmulti_select\x18\x04 \x01(\bR\vmultiSelect\x12\x1d\n" +
 	"\n" +
@@ -1628,25 +1630,25 @@ const file_sheets_proto_rawDesc = "" +
 	"\n" +
 	"max_select\x18\x06 \x01(\x05R\tmaxSelect\x12-\n" +
 	"\aoptions\x18\n" +
-	" \x03(\v2\x13.core.v1.MenuOptionR\aoptions\"\xa4\x01\n" +
+	" \x03(\v2\x13.core.v1.MenuOptionR\aoptions\"\xbf\x01\n" +
 	"\n" +
-	"MenuOption\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12/\n" +
+	"MenuOption\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12\x1d\n" +
+	"\x05title\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x05title\x12/\n" +
 	"\vprice_delta\x18\x03 \x01(\v2\x0e.core.v1.MoneyR\n" +
-	"priceDelta\x12!\n" +
-	"\fmax_quantity\x18\x04 \x01(\x05R\vmaxQuantity\x12\x1c\n" +
-	"\tavailable\x18\x05 \x01(\bR\tavailable\"\x87\x01\n" +
-	"\x18AttachMenuWithPayloadReq\x12'\n" +
-	"\x0fidempotency_key\x18\x01 \x01(\tR\x0eidempotencyKey\x12\x19\n" +
-	"\bsheet_id\x18\x02 \x01(\tR\asheetId\x12'\n" +
-	"\x05items\x18\x03 \x03(\v2\x11.core.v1.MenuItemR\x05items\"j\n" +
+	"priceDelta\x12*\n" +
+	"\fmax_quantity\x18\x04 \x01(\x05B\a\xfaB\x04\x1a\x02(\x01R\vmaxQuantity\x12\x1c\n" +
+	"\tavailable\x18\x05 \x01(\bR\tavailable\"\xa3\x01\n" +
+	"\x18AttachMenuWithPayloadReq\x120\n" +
+	"\x0fidempotency_key\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x0eidempotencyKey\x12\"\n" +
+	"\bsheet_id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\asheetId\x121\n" +
+	"\x05items\x18\x03 \x03(\v2\x11.core.v1.MenuItemB\b\xfaB\x05\x92\x01\x02\b\x01R\x05items\"j\n" +
 	"\x19AttachMenuWithPayloadResp\x12'\n" +
 	"\x05items\x18\x01 \x03(\v2\x11.core.v1.MenuItemR\x05items\x12$\n" +
-	"\x05sheet\x18\x02 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"'\n" +
+	"\x05sheet\x18\x02 \x01(\v2\x0e.core.v1.SheetR\x05sheet\"0\n" +
 	"\n" +
-	"GetMenuReq\x12\x19\n" +
-	"\bsheet_id\x18\x01 \x01(\tR\asheetId\"6\n" +
+	"GetMenuReq\x12\"\n" +
+	"\bsheet_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\asheetId\"6\n" +
 	"\vGetMenuResp\x12'\n" +
 	"\x05items\x18\x01 \x03(\v2\x11.core.v1.MenuItemR\x05items*u\n" +
 	"\vSheetStatus\x12\x1c\n" +
@@ -1664,7 +1666,7 @@ const file_sheets_proto_rawDesc = "" +
 	"\fRemoveMember\x12\x1c.core.v1.RemoveMemberRequest\x1a\x1d.core.v1.RemoveMemberResponse\x12H\n" +
 	"\vListMembers\x12\x1b.core.v1.ListMembersRequest\x1a\x1c.core.v1.ListMembersResponse\x12^\n" +
 	"\x15AttachMenuWithPayload\x12!.core.v1.AttachMenuWithPayloadReq\x1a\".core.v1.AttachMenuWithPayloadResp\x124\n" +
-	"\aGetMenu\x12\x13.core.v1.GetMenuReq\x1a\x14.core.v1.GetMenuRespB7Z5github.com/deni12345/dae-core/proto/gen/corev1;corev1b\x06proto3"
+	"\aGetMenu\x12\x13.core.v1.GetMenuReq\x1a\x14.core.v1.GetMenuRespB;Z9github.com/deni12345/dae-services/proto/gen/corev1;corev1b\x06proto3"
 
 var (
 	file_sheets_proto_rawDescOnce sync.Once

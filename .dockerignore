@@ -4,6 +4,7 @@ node_modules/
 .github/
 .vscode/
 .idea/
+.gitignore
 
 # Build artifacts
 bin/
@@ -23,3 +24,6 @@ configs.yml
 
 # Go specific
 vendor/
+
+# File
+*.md

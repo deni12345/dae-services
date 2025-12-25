@@ -1,10 +1,11 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-services/proto/gen/corev1;corev1";
 
 import "common.proto";
 import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
 message OrderLineOption {
   string group_id = 1;   // from MenuOptionGroup.id
@@ -42,8 +43,8 @@ message Order {
 }
 
 message ListOrdersFilter {
-  string sheet_id = 1; // required
-  string user_id = 3;
+  string sheet_id = 1 [(validate.rules).string = {min_len: 1}]; // required
+  string user_id = 3 [(validate.rules).string = {min_len: 1}];
   google.protobuf.Timestamp since = 4; // updated since (optional)
 }
 
@@ -59,39 +60,39 @@ service OrdersService {
 }
 
 message OrderLineOptionReq {
-  string group_id = 1;  // from MenuOptionGroup.id
-  string option_id = 2; // from MenuOption.id
-  int32 quantity = 3;
+  string group_id = 1 [(validate.rules).string = {min_len: 1}];  // from MenuOptionGroup.id
+  string option_id = 2 [(validate.rules).string = {min_len: 1}]; // from MenuOption.id
+  int32 quantity = 3 [(validate.rules).int32 = {gt: 0}];
 }
 
 message OrderLineReq {
-  string menu_item_id = 1;
-  int32 quantity = 2; // item count
-  repeated OrderLineOptionReq options = 3;
-  string note = 4;
+  string menu_item_id = 1 [(validate.rules).string = {min_len: 1}];
+  int32 quantity = 2 [(validate.rules).int32 = {gt: 0}]; // item count
+  repeated OrderLineOptionReq options = 3 [(validate.rules).repeated = {min_items: 0}];
+  string note = 4 [(validate.rules).string = {max_len: 500}];
 }
 
 message CreateOrderReq {
-  string idempotency_key = 1; // dedupe client retries
-  string sheet_id = 2;
-  repeated OrderLineReq lines = 4;
-  string user_id = 5;
-  string note = 7;
+  string idempotency_key = 1 [(validate.rules).string = {min_len: 1}]; // dedupe client retries
+  string sheet_id = 2 [(validate.rules).string = {min_len: 1}];
+  repeated OrderLineReq lines = 4 [(validate.rules).repeated = {min_items: 1}];
+  string user_id = 5 [(validate.rules).string = {min_len: 1}];
+  string note = 7 [(validate.rules).string = {max_len: 500}];
 }
 message CreateOrderResp { Order order = 1; }
 
 message UpdateOrderReq {
-  string id = 1;
-  repeated OrderLineReq lines = 2;
-  optional string note = 4;
+  string id = 1 [(validate.rules).string = {min_len: 1}];
+  repeated OrderLineReq lines = 2 [(validate.rules).repeated = {min_items: 1}];
+  optional string note = 4 [(validate.rules).string = {max_len: 500}];
 }
 message UpdateOrderResp { Order order = 1; }
 
-message GetOrderReq { string id = 1; }
+message GetOrderReq { string id = 1 [(validate.rules).string = {min_len: 1}]; }
 message GetOrderResp { Order order = 1; }
 
 message ListOrdersReq {
-  int32 page_size = 1;
+  int32 page_size = 1 [(validate.rules).int32 = {gte: 1, lte: 100}];
   Cursor cursor = 2;
   ListOrdersFilter filter = 3;
 }

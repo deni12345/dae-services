@@ -1,15 +1,15 @@
 syntax = "proto3";
 
 package core.v1;
-option go_package = "github.com/deni12345/dae-core/proto/gen/corev1;corev1";
+option go_package = "github.com/deni12345/dae-services/proto/gen/corev1;corev1";
 
-import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
 message Cursor {
-  string id = 1; // Document ID for cursor-based pagination
+  string id = 1 [(validate.rules).string = {min_len: 1}]; // Document ID for cursor-based pagination
 }
 
 message Money {
-  string currency_code = 1; // e.g., "VND"
-  int64 amount = 2;
+  string currency_code = 1 [(validate.rules).string = {min_len: 3, max_len: 3}]; // e.g., "VND"
+  int64 amount = 2 [(validate.rules).int64 = {gte: 0}];
 }

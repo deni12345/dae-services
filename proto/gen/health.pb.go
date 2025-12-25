@@ -21,75 +21,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type HealthCheckResponse_ServingStatus int32
-
-const (
-	HealthCheckResponse_UNKNOWN     HealthCheckResponse_ServingStatus = 0
-	HealthCheckResponse_SERVING     HealthCheckResponse_ServingStatus = 1
-	HealthCheckResponse_NOT_SERVING HealthCheckResponse_ServingStatus = 2
-)
-
-// Enum value maps for HealthCheckResponse_ServingStatus.
-var (
-	HealthCheckResponse_ServingStatus_name = map[int32]string{
-		0: "UNKNOWN",
-		1: "SERVING",
-		2: "NOT_SERVING",
-	}
-	HealthCheckResponse_ServingStatus_value = map[string]int32{
-		"UNKNOWN":     0,
-		"SERVING":     1,
-		"NOT_SERVING": 2,
-	}
-)
-
-func (x HealthCheckResponse_ServingStatus) Enum() *HealthCheckResponse_ServingStatus {
-	p := new(HealthCheckResponse_ServingStatus)
-	*p = x
-	return p
-}
-
-func (x HealthCheckResponse_ServingStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (HealthCheckResponse_ServingStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_health_proto_enumTypes[0].Descriptor()
-}
-
-func (HealthCheckResponse_ServingStatus) Type() protoreflect.EnumType {
-	return &file_health_proto_enumTypes[0]
-}
-
-func (x HealthCheckResponse_ServingStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use HealthCheckResponse_ServingStatus.Descriptor instead.
-func (HealthCheckResponse_ServingStatus) EnumDescriptor() ([]byte, []int) {
-	return file_health_proto_rawDescGZIP(), []int{1, 0}
-}
-
-type HealthCheckRequest struct {
+type HealthCheckReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *HealthCheckRequest) Reset() {
-	*x = HealthCheckRequest{}
+func (x *HealthCheckReq) Reset() {
+	*x = HealthCheckReq{}
 	mi := &file_health_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *HealthCheckRequest) String() string {
+func (x *HealthCheckReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HealthCheckRequest) ProtoMessage() {}
+func (*HealthCheckReq) ProtoMessage() {}
 
-func (x *HealthCheckRequest) ProtoReflect() protoreflect.Message {
+func (x *HealthCheckReq) ProtoReflect() protoreflect.Message {
 	mi := &file_health_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -101,33 +52,32 @@ func (x *HealthCheckRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use HealthCheckRequest.ProtoReflect.Descriptor instead.
-func (*HealthCheckRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use HealthCheckReq.ProtoReflect.Descriptor instead.
+func (*HealthCheckReq) Descriptor() ([]byte, []int) {
 	return file_health_proto_rawDescGZIP(), []int{0}
 }
 
-type HealthCheckResponse struct {
-	state         protoimpl.MessageState            `protogen:"open.v1"`
-	Status        HealthCheckResponse_ServingStatus `protobuf:"varint,1,opt,name=status,proto3,enum=core.v1.HealthCheckResponse_ServingStatus" json:"status,omitempty"`
-	Version       string                            `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"` // optional git/tag injected by server
+type HealthCheckResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *HealthCheckResponse) Reset() {
-	*x = HealthCheckResponse{}
+func (x *HealthCheckResp) Reset() {
+	*x = HealthCheckResp{}
 	mi := &file_health_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *HealthCheckResponse) String() string {
+func (x *HealthCheckResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*HealthCheckResponse) ProtoMessage() {}
+func (*HealthCheckResp) ProtoMessage() {}
 
-func (x *HealthCheckResponse) ProtoReflect() protoreflect.Message {
+func (x *HealthCheckResp) ProtoReflect() protoreflect.Message {
 	mi := &file_health_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -139,21 +89,14 @@ func (x *HealthCheckResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use HealthCheckResponse.ProtoReflect.Descriptor instead.
-func (*HealthCheckResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use HealthCheckResp.ProtoReflect.Descriptor instead.
+func (*HealthCheckResp) Descriptor() ([]byte, []int) {
 	return file_health_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *HealthCheckResponse) GetStatus() HealthCheckResponse_ServingStatus {
+func (x *HealthCheckResp) GetMessage() string {
 	if x != nil {
-		return x.Status
-	}
-	return HealthCheckResponse_UNKNOWN
-}
-
-func (x *HealthCheckResponse) GetVersion() string {
-	if x != nil {
-		return x.Version
+		return x.Message
 	}
 	return ""
 }
@@ -162,17 +105,12 @@ var File_health_proto protoreflect.FileDescriptor
 
 const file_health_proto_rawDesc = "" +
 	"\n" +
-	"\fhealth.proto\x12\acore.v1\"\x14\n" +
-	"\x12HealthCheckRequest\"\xaf\x01\n" +
-	"\x13HealthCheckResponse\x12B\n" +
-	"\x06status\x18\x01 \x01(\x0e2*.core.v1.HealthCheckResponse.ServingStatusR\x06status\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\tR\aversion\":\n" +
-	"\rServingStatus\x12\v\n" +
-	"\aUNKNOWN\x10\x00\x12\v\n" +
-	"\aSERVING\x10\x01\x12\x0f\n" +
-	"\vNOT_SERVING\x10\x022S\n" +
-	"\rHealthService\x12B\n" +
-	"\x05Check\x12\x1b.core.v1.HealthCheckRequest\x1a\x1c.core.v1.HealthCheckResponseB7Z5github.com/deni12345/dae-core/proto/gen/corev1;corev1b\x06proto3"
+	"\fhealth.proto\x12\acore.v1\"\x10\n" +
+	"\x0eHealthCheckReq\"+\n" +
+	"\x0fHealthCheckResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2Q\n" +
+	"\rHealthService\x12@\n" +
+	"\vCheckHealth\x12\x17.core.v1.HealthCheckReq\x1a\x18.core.v1.HealthCheckRespB;Z9github.com/deni12345/dae-services/proto/gen/corev1;corev1b\x06proto3"
 
 var (
 	file_health_proto_rawDescOnce sync.Once
@@ -186,22 +124,19 @@ func file_health_proto_rawDescGZIP() []byte {
 	return file_health_proto_rawDescData
 }
 
-var file_health_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_health_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_health_proto_goTypes = []any{
-	(HealthCheckResponse_ServingStatus)(0), // 0: core.v1.HealthCheckResponse.ServingStatus
-	(*HealthCheckRequest)(nil),             // 1: core.v1.HealthCheckRequest
-	(*HealthCheckResponse)(nil),            // 2: core.v1.HealthCheckResponse
+	(*HealthCheckReq)(nil),  // 0: core.v1.HealthCheckReq
+	(*HealthCheckResp)(nil), // 1: core.v1.HealthCheckResp
 }
 var file_health_proto_depIdxs = []int32{
-	0, // 0: core.v1.HealthCheckResponse.status:type_name -> core.v1.HealthCheckResponse.ServingStatus
-	1, // 1: core.v1.HealthService.Check:input_type -> core.v1.HealthCheckRequest
-	2, // 2: core.v1.HealthService.Check:output_type -> core.v1.HealthCheckResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 0: core.v1.HealthService.CheckHealth:input_type -> core.v1.HealthCheckReq
+	1, // 1: core.v1.HealthService.CheckHealth:output_type -> core.v1.HealthCheckResp
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_health_proto_init() }
@@ -214,14 +149,13 @@ func file_health_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_health_proto_rawDesc), len(file_health_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_health_proto_goTypes,
 		DependencyIndexes: file_health_proto_depIdxs,
-		EnumInfos:         file_health_proto_enumTypes,
 		MessageInfos:      file_health_proto_msgTypes,
 	}.Build()
 	File_health_proto = out.File
