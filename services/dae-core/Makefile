@@ -1,4 +1,3 @@
-MAIN_ENTRY=dae-core
 BIN_DIR=bin
 APP_NAME=dae-core
 
@@ -6,16 +5,16 @@ APP_NAME=dae-core
 build:
 	@echo "Building $(APP_NAME)..."
 	@mkdir -p $(BIN_DIR)
-	go build -o $(BIN_DIR)/$(APP_NAME) ./cmd/$(MAIN_ENTRY)/main.go
+	go build -o $(BIN_DIR)/$(APP_NAME) ./cmd/main.go
 
 build-linux:
 	@echo "Building $(APP_NAME) for Linux..."
 	@mkdir -p $(BIN_DIR)
-	GOOS=linux GOARCH=amd64 go build -o $(BIN_DIR)/$(APP_NAME)-linux ./cmd/$(MAIN_ENTRY)/main.go
+	GOOS=linux GOARCH=amd64 go build -o $(BIN_DIR)/$(APP_NAME)-linux ./cmd/main.go
 
 # Development
 run:
-	@FIRESTORE_EMULATOR_HOST=localhost:8080 GOOGLE_CLOUD_PROJECT=dae-project go run ./cmd/$(MAIN_ENTRY)/main.go
+	@FIRESTORE_EMULATOR_HOST=localhost:8080 GOOGLE_CLOUD_PROJECT=dae-project go run ./cmd/main.go
 
 fmt:
 	@echo "Formatting code..."

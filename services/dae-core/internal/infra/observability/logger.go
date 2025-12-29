@@ -55,7 +55,6 @@ func InitLogger(ctx context.Context, cfg LoggerConfig) (func(context.Context) er
 	)
 
 	global.SetLoggerProvider(loggerProvider)
-	shutdown := loggerProvider.Shutdown
 	otelLogger := loggerProvider.Logger("otel-logger")
 
 	handler := prettylog.NewPrettyHandler(
@@ -66,7 +65,7 @@ func InitLogger(ctx context.Context, cfg LoggerConfig) (func(context.Context) er
 	logger := slog.New(handler)
 	slog.SetDefault(logger)
 
-	return shutdown, nil
+	return loggerProvider.Shutdown, nil
 }
 
 func parseLogLevel(level string) slog.Level {

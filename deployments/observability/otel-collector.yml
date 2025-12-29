@@ -18,7 +18,7 @@ exporters:
       insecure: true
 
   otlphttp/loki:
-    endpoint: "http://loki:3100/loki/otlp"
+    endpoint: "http://loki:3100/otlp"
     timeout: 5s
 
 service:
